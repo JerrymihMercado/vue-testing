@@ -23,7 +23,7 @@
    id="text" v-model="product.title">
   <button type="submit" style="padding:10px 20px" >Edit </button>
 </form>
-
+ sample
   <p v-for="product in products" :key="product.id">
   {{ product.title }}
 </p>
