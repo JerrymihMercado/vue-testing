@@ -29,8 +29,9 @@
               <td>{{ product.title }}</td>
               <td>{{ product.price }}</td>
               <td>{{ product.description }}</td>
-              <td><button class="btn btn-danger btn-sm">Delete</button></td>
-              <td><button class="btn btn-info btn-sm">Edit</button></td>
+              <td><button class="btn btn-danger btn-sm" @click="deleteProduct(products.id)">Delete</button></td>
+              <td><button class="btn btn-info btn-sm"  data-bs-toggle="modal"
+          data-bs-target="#editProductModal">Edit</button></td>
             </tr>
           </tbody>
         </table>
@@ -62,7 +63,70 @@
                 <label for="product_title">Name</label>
                 <input
                   id="product_title"
-                  v-model="productData.name"
+                  v-model="productData.title"
+                  
+                  class="form-control"
+                />
+              </div>
+              <div class="py-2">
+                <label for="product_title">Price</label>
+                <input
+                  id="product_title"
+                  type="number"
+                  v-model="productData.price"
+                  class="form-control"
+                />
+              </div>
+              <div class="py-2">
+                <label for="product_description">description</label>
+                <input
+                  id="product_description"
+                  v-model="productData.description"
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Update product modal -->
+    <div
+      class="modal fade"
+      id="editProductModal"
+      tabindex="-1"
+      aria-labelledby="editProductModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <form @submit.prevent="editProduct">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editProductModalLabel">Update prodcut</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div class="py-2">
+                <label for="product_title">Name</label>
+                <input
+                  id="product_title"
+                  v-model="productData.title"
+                  
                   class="form-control"
                 />
               </div>
@@ -109,6 +173,8 @@ const text = ref("");
 const product = ref({ title: "" });
 const productData = ref({ title: "", price: 0, description: "" });
 
+
+
 const getAllProduct = () => {
   axios({
     method: "get",
@@ -130,7 +196,7 @@ const AddProduct = (e) => {
     method: "post",
     url: "https://dummyjson.com/products/add",
     data: {
-      title: productData.value.name,
+      title: productData.value.title,
       price: productData.value.price,
       description: productData.value.description,
     },
@@ -161,11 +227,22 @@ const editProduct = (e) => {
     method: "PUT",
     url: "https://dummyjson.com/products/1",
     data: {
-      title: product.value.title,
+      title: productData.value.title,
+      price: productData.value.price,
+      description: productData.value.description,
     },
   })
     .then((data) => {
       console.log(data);
+        // products.value = [...products.value, productData.value];
+       
+       var closeButton = document.querySelector(
+        '#editProductModal [data-bs-dismiss="modal"]'
+      );
+      if (closeButton) {
+        closeButton.click();
+      }
+
     })
     .catch((err) => {
       console.log(err);
@@ -173,8 +250,9 @@ const editProduct = (e) => {
 };
 
 const deleteProduct = (e) => {
-  e.preventDefault();
+  // e.preventDefault();
   console.log("delete");
+ 
   axios({
     method: "DELETE",
     url: "https://dummyjson.com/products/1",
